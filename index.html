@@ -78,14 +78,57 @@
     gap:30px;
   }
   .card{
-    background:rgba(0,0,0,.80);
-    border-radius:20px;
-    padding:28px;
-    text-align:center;
-    border:1px solid rgba(192,132,252,.18);
-    box-shadow:0 0 30px rgba(0,0,0,.8);
-    transition:transform .25s ease, box-shadow .25s ease;
-  }
+  position: relative;
+  overflow: hidden;
+  background: rgba(0,0,0,.80);
+  border-radius:20px;
+  padding:28px;
+  text-align:center;
+  border:1px solid rgba(192,132,252,.18);
+  box-shadow:0 0 30px rgba(0,0,0,.8);
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+
+/* Animated shimmer gradient */
+.card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-150%;
+  width:200%;
+  height:100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.15),
+    rgba(255,0,255,0.25),
+    rgba(0,255,255,0.25),
+    transparent
+  );
+  transition: left .6s ease;
+  z-index:0;
+}
+
+/* Keep text above */
+.card *{
+  position:relative;
+  z-index:1;
+}
+
+.card:hover{
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(192,132,252,.4);
+}
+
+/* Slide shimmer across */
+.card:hover::before{
+  left:100%;
+}
+
+@keyframes gradientMove{
+  0%{background-position:0% 50%;}
+  100%{background-position:100% 50%;}
+}
   .card:hover{
     transform:translateY(-8px);
     box-shadow:0 18px 45px rgba(0,0,0,.55);
@@ -196,6 +239,100 @@ body.menu-blur::before{
   backdrop-filter: blur(2px);
 }
 
+/* ===== THEME TOGGLE POSITION ===== */
+#themeToggle{
+  position: fixed;
+  top: 80px;        /* below nav bar */
+  right: 10px;
+  z-index: 1100;    /* above content */
+}
+
+#themeToggle:hover{
+  transform: translateY(-2px) scale(1.05);
+}
+
+.glow-hover{
+  position: relative;
+  isolation: isolate;   /* VERY IMPORTANT */
+}
+
+.glow-hover::after{
+  content:"";
+  position:absolute;
+  inset:-6px;                 /* outside the card */
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    rgba(250,204,21,.6),
+    rgba(192,132,252,.6),
+    rgba(59,130,246,.6)
+  );
+  filter: blur(18px);
+  opacity:0;
+  z-index:-1;
+  transition: opacity .25s ease;
+  pointer-events:none;
+}
+
+.glow-hover:hover::after{
+  opacity:1;
+}
+
+/* ===== UNIVERSAL HOVER GLOW (OG STYLE) ===== */
+nav button, .card{
+  position: relative;              /* needed for ::before */
+  isolation: isolate;              /* keeps glow behind element only */
+}
+
+/* the glow layer */
+nav button::before,
+.card::before,
+#topBtn::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    rgba(250,204,21,.75),
+    rgba(192,132,252,.70),
+    rgba(59,130,246,.70)
+  );
+  filter: blur(10px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity .25s ease, filter .25s ease;
+}
+
+/* ON HOVER: glow appears */
+nav button:hover::before,
+.card:hover::before,
+#topBtn:hover::before{
+  opacity: .95;
+  filter: blur(14px);
+}
+
+/* extra shine (subtle) */
+nav button:hover,
+.card:hover{
+  box-shadow: 0 20px 55px rgba(192,132,252,.18);
+}
+
+/* LIGHT MODE: softer glow */
+body.light nav button::before,
+body.light .card::before,
+body.light #topBtn::before{
+  background: linear-gradient(
+    120deg,
+    rgba(59,130,246,.45),
+    rgba(147,197,253,.45),
+    rgba(192,132,252,.35)
+  );
+  filter: blur(10px);
+}
+nav button, .card, .theme-toggle { position:relative; isolation:isolate; }
+
+
 </style>
 
 </head>
@@ -203,7 +340,7 @@ body.menu-blur::before{
 <body>
 
 <nav>
-  <button onclick="window.location.href='https://aathipro-web.github.io/Digital-Detox-updating/'">Home</button>
+  <button onclick="goTo1()">Home</button>
   <button onclick="goTo('definition')">Definition</button>
   <button onclick="goTo('impact')">Impact</button>
   <button onclick="goTo('solution')">Solutions</button>
@@ -222,15 +359,15 @@ body.menu-blur::before{
 <section id="definition">
   <h2>What is Digital Addiction?</h2>
   <div class="grid">
-    <div class="card">
+    <div class="card glow-hover">
       <h3>Meaning</h3>
       <p>Uncontrolled and excessive use of digital devices.</p>
     </div>
-    <div class="card">
+    <div class="card glow-hover">
       <h3>Devices</h3>
       <p>Mobiles, laptops, tablets, gaming consoles.</p>
     </div>
-    <div class="card">
+    <div class="card glow-hover">
       <h3>Causes</h3>
       <p>Social media, gaming, online videos.</p>
     </div>
@@ -240,15 +377,15 @@ body.menu-blur::before{
 <section id="impact">
   <h2>Impact on Students</h2>
   <div class="grid">
-    <div class="card">
+    <div class="card glow-hover">
       <h3>Mental</h3>
       <p>Stress, anxiety, reduced focus.</p>
     </div>
-    <div class="card">
+    <div class="card glow-hover">
       <h3>Physical</h3>
       <p>Eye strain, poor sleep, headaches.</p>
     </div>
-    <div class="card">
+    <div class="card glow-hover">
       <h3>Academic</h3>
       <p>Lower concentration and performance.</p>
     </div>
@@ -258,15 +395,15 @@ body.menu-blur::before{
 <section id="solution">
   <h2>Healthy Digital Habits</h2>
   <div class="grid">
-    <div class="card">
+    <div class="card glow-hover">
       <h3>Time Limits</h3>
       <p>Fix daily screen-time limits.</p>
     </div>
-    <div class="card">
+    <div class="card glow-hover">
       <h3>Breaks</h3>
       <p>Follow the 20-20-20 rule.</p>
     </div>
-    <div class="card">
+    <div class="card glow-hover">
       <h3>Offline Life</h3>
       <p>Sports, reading, hobbies.</p>
     </div>
@@ -279,8 +416,20 @@ body.menu-blur::before{
 
 <button id="topBtn">↑</button>
 
+<audio id="clickSound" preload="auto">
+  <source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg">
+</audio>
+
 <script>
+  // ===== SOUND SYSTEM =====
+  const clickSound = document.getElementById("clickSound");
+  function playClick(){
+    clickSound.currentTime = 0;
+    clickSound.play();
+  }
+
  function goTo(id){
+  playClick();
   const wipe = document.getElementById("blurWipe");
   wipe.classList.remove("play");
   void wipe.offsetWidth;          // restart animation
@@ -290,12 +439,6 @@ body.menu-blur::before{
     document.getElementById(id).scrollIntoView({ behavior: "smooth" });
   }, 120);
 }
-
-
-  window.onscroll = function () {
-    document.getElementById("topBtn").style.display =
-      window.scrollY > 300 ? "block" : "none";
-  };
 
   function goTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -308,7 +451,8 @@ body.menu-blur::before{
     });
 
     topBtn.onclick = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+      playClick(); 
+      window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     // THEME TOGGLE
@@ -319,6 +463,17 @@ body.menu-blur::before{
     document.body.classList.toggle("light");
     icon.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
     };
+
+    function goTo1() {
+      const sound = document.getElementById("clickSound");
+      sound.currentTime = 0;
+      sound.play().catch(()=>{});
+
+      setTimeout(() => {
+        window.location.href = "https://aathipro-web.github.io/Digital-Detox-updating/";
+      }, 180);   // small delay so sound plays
+    }
+
 </script>
 
 </body>
