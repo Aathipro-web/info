@@ -464,8 +464,9 @@ nav button, .card, .theme-toggle { position:relative; isolation:isolate; }
     const icon = toggleBtn.querySelector("span");
 
     toggleBtn.onclick = () => {
-    document.body.classList.toggle("light");
-    icon.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
+      playClick();
+      document.body.classList.toggle("light");
+      icon.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
     };
 
     function goTo1() {
