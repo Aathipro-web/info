@@ -10,28 +10,29 @@
   *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
   html{scroll-behavior:smooth}
 
-  /* ===== OG DARK MODE ===== */
   body{
-    background:radial-gradient(circle at top,#2a003f,#000);
+  background: linear-gradient(
+    120deg,
+    #14001f,
+    #2a003f,
+    #000814,
+    #14001f
+  );
+  background-size: 400% 400%;
+  animation: gradientFlow 35s ease infinite;
     color:#e5e5e5;
     transition: background .35s, color .35s;
   }
+@keyframes gradientFlow{
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
   h1,h2,h3{color:#c084fc}
   h2{margin-bottom:40px;font-size:2rem;text-align:center}
 
   /* NAV (OG-styled) */
-  nav{
-    position:fixed;
-    top:0;
-    width:100%;
-    padding:12px 10px;
-    text-align:center;
-    background:rgba(0,0,0,.55);
-    backdrop-filter: blur(10px);
-    border-bottom:1px solid rgba(192,132,252,.18);
-    z-index:1000;
-  }
 
   nav button{
     margin:0 8px;
@@ -113,11 +114,13 @@
 .card *{
   position:relative;
   z-index:1;
+  transition: transform .35s cubic-bezier(.2,.8,.2,1),
+              box-shadow .35s ease;
 }
 
 .card:hover{
-  transform: translateY(-10px);
-  box-shadow: 0 20px 50px rgba(192,132,252,.4);
+  transform: translateY(-15px) scale(1.03);
+  box-shadow: 0 30px 60px rgba(0,0,0,.35);
 }
 
 /* Slide shimmer across */
@@ -170,6 +173,9 @@
     background:#eef2ff;
     color:#0f172a;
   }
+  body.light #particles{
+    opacity: .7;
+  }
   body.light nav{
     background:rgba(255,255,255,.75);
     border-bottom:1px solid rgba(59,130,246,.18);
@@ -189,6 +195,17 @@
     color:#334155;
     border-top:1px solid rgba(59,130,246,.18);
   }
+#particles{
+  position: fixed;
+  inset: 0;
+  z-index: 0;        /* CHANGE THIS */
+  pointer-events: none;
+}
+
+nav, header, section, footer {
+  position: relative;
+  z-index: 1;
+}
 
   @media(max-width:600px){
     header h1{font-size:2.4rem}
@@ -240,11 +257,29 @@ body.menu-blur::before{
 }
 
 /* ===== THEME TOGGLE POSITION ===== */
-#themeToggle{
+nav{
   position: fixed;
-  top: 80px;        /* below nav bar */
-  right: 10px;
-  z-index: 1100;    /* above content */
+  top: 0;
+  width: 100%;
+  padding: 12px 20px;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(192,132,252,.18);
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-center{
+  display: flex;
+  gap: 10px;
+}
+
+#themeToggle{
+  position: absolute;
+  right: 20px;
 }
 
 #themeToggle:hover{
@@ -302,6 +337,7 @@ nav button::before,
   opacity: 0;
   z-index: -1;
   transition: opacity .25s ease, filter .25s ease;
+  pointer-events: none;
 }
 
 /* ON HOVER: glow appears */
@@ -332,22 +368,99 @@ body.light #topBtn::before{
 }
 nav button, .card, .theme-toggle { position:relative; isolation:isolate; }
 
+.reveal {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 0.9s ease;
+}
+
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+    /* ===== TITLE GLOW ANIMATION ===== */
+    @keyframes glowShift {
+      0%   { color: 0 0 10px #4da6ff, 0 0 20px #4da6ff; }
+      25%  { color: 0 0 10px #6f42c1, 0 0 20px #6f42c1; }
+      50%  { color: 0 0 10px #00c9a7, 0 0 20px #00c9a7; }
+      75%  { color: 0 0 10px #ff4da6, 0 0 20px #ff4da6; }
+      100% { color: 0 0 10px #4da6ff, 0 0 20px #4da6ff; }
+    }
+
+    /* ===== MOVING TEXT GRADIENT ===== */
+    h1{
+      font-weight: 700;
+      background: linear-gradient(
+        90deg,
+        #4da6ff,
+        #6f42c1,
+        #00c9a7,
+        #ff4da6,
+        #4da6ff
+      );
+      background-size: 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textWave 5s linear infinite;
+    }
+
+    @keyframes textWave {
+      0% { background-position: 0%; }
+      100% { background-position: 300%; }
+    }
+
+    body.dark-mode .hero-title {
+      background: linear-gradient(
+        90deg,
+        #c183fc,
+        #ffffff,
+        #c183fc
+      );
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textWave 5s linear infinite;
+    }
+
+    /* ===== CURSOR GLOW ===== */
+    .cursor-glow {
+      position: fixed;
+      width: 150px;
+      height: 150px;
+      pointer-events: none;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(77,166,255,0.4) 0%, rgba(77,166,255,0.1) 40%, transparent 70%);
+      transform: translate(-50%, -50%);
+      transition: background 0.3s ease;
+      z-index: 9999;
+    }
+
+    body.dark-mode .cursor-glow {
+      background: radial-gradient(circle, rgba(193,131,252,0.4) 0%, rgba(193,131,252,0.1) 40%, transparent 70%);
+    }
 
 </style>
 
 </head>
 
 <body>
+<canvas id="particles"></canvas>
 
 <nav>
-  <button onclick="goTo1()">Home</button>
-  <button onclick="goTo('definition')">Definition</button>
-  <button onclick="goTo('impact')">Impact</button>
-  <button onclick="goTo('solution')">Solutions</button>
+  <div>
+    <button onclick="goTo1()">Home</button>
+    <button onclick="goTo('definition')">Definition</button>
+    <button onclick="goTo('impact')">Impact</button>
+    <button onclick="goTo('solution')">Solutions</button>
+  </div>
+  
   <button id="themeToggle" class="theme-toggle">
-    <span>🌙</span>
+    <span id="themeIcon">🌙</span>
   </button>
 </nav>
+
+<div class="cursor-glow"></div>
 
 <div id="blurWipe"></div>
 
@@ -359,15 +472,15 @@ nav button, .card, .theme-toggle { position:relative; isolation:isolate; }
 <section id="definition">
   <h2>What is Digital Addiction?</h2>
   <div class="grid">
-    <div class="card glow-hover">
+    <div class="card glow-hover reveal">
       <h3>Meaning</h3>
       <p>Uncontrolled and excessive use of digital devices.</p>
     </div>
-    <div class="card glow-hover">
+    <div class="card glow-hover reveal">
       <h3>Devices</h3>
       <p>Mobiles, laptops, tablets, gaming consoles.</p>
     </div>
-    <div class="card glow-hover">
+    <div class="card glow-hover reveal">
       <h3>Causes</h3>
       <p>Social media, gaming, online videos.</p>
     </div>
@@ -377,15 +490,15 @@ nav button, .card, .theme-toggle { position:relative; isolation:isolate; }
 <section id="impact">
   <h2>Impact on Students</h2>
   <div class="grid">
-    <div class="card glow-hover">
+    <div class="card glow-hover reveal">
       <h3>Mental</h3>
       <p>Stress, anxiety, reduced focus.</p>
     </div>
-    <div class="card glow-hover">
+    <div class="card glow-hover reveal">
       <h3>Physical</h3>
       <p>Eye strain, poor sleep, headaches.</p>
     </div>
-    <div class="card glow-hover">
+    <div class="card glow-hover reveal">
       <h3>Academic</h3>
       <p>Lower concentration and performance.</p>
     </div>
@@ -395,15 +508,15 @@ nav button, .card, .theme-toggle { position:relative; isolation:isolate; }
 <section id="solution">
   <h2>Healthy Digital Habits</h2>
   <div class="grid">
-    <div class="card glow-hover">
+    <div class="card glow-hover reveal">
       <h3>Time Limits</h3>
       <p>Fix daily screen-time limits.</p>
     </div>
-    <div class="card glow-hover">
+    <div class="card glow-hover reveal">
       <h3>Breaks</h3>
       <p>Follow the 20-20-20 rule.</p>
     </div>
-    <div class="card glow-hover">
+    <div class="card glow-hover reveal">
       <h3>Offline Life</h3>
       <p>Sports, reading, hobbies.</p>
     </div>
@@ -459,15 +572,21 @@ nav button, .card, .theme-toggle { position:relative; isolation:isolate; }
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    // THEME TOGGLE
-    const toggleBtn = document.getElementById("themeToggle");
-    const icon = toggleBtn.querySelector("span");
+    const reveals = document.querySelectorAll(".reveal");
 
-    toggleBtn.onclick = () => {
-      playClick();
-      document.body.classList.toggle("light");
-      icon.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
-    };
+    function revealOnScroll() {
+      reveals.forEach(el => {
+        const windowHeight = window.innerHeight;
+        const elementTop = el.getBoundingClientRect().top;
+
+        if (elementTop < windowHeight - 100) {
+          el.classList.add("show");
+        }
+      });
+    }
+
+    window.addEventListener("scroll", revealOnScroll);
+    window.addEventListener("load", revealOnScroll);
 
     function goTo1() {
       const sound = document.getElementById("clickSound");
@@ -478,6 +597,149 @@ nav button, .card, .theme-toggle { position:relative; isolation:isolate; }
         window.location.href = "https://aathipro-web.github.io/Digital-Detox-updating/";
       }, 180);   // small delay so sound plays
     }
+
+    const glow = document.querySelector(".cursor-glow");
+
+    document.addEventListener("mousemove", (e) => {
+      glow.style.left = e.clientX + "px";
+      glow.style.top = e.clientY + "px";
+    });
+
+    document.querySelectorAll(".card").forEach(card=>{
+      card.addEventListener("mousemove", e=>{
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const rotateX = ((y / rect.height) - 0.5) * 10;
+        const rotateY = ((x / rect.width) - 0.5) * -10;
+
+        card.style.transform =
+          `translateY(-15px) scale(1.03) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+
+      card.addEventListener("mouseleave", ()=>{
+        card.style.transform = "";
+      });
+    });
+
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    let elements = [];
+
+    function createDarkParticles(){
+      elements = [];
+      for(let i=0;i<60;i++){
+        elements.push({
+          type:"particle",
+          x: Math.random()*canvas.width,
+          y: Math.random()*canvas.height,
+          r: Math.random()*2 + .5,
+          dx: (Math.random()-.5)*.2,
+          dy: (Math.random()-.5)*.2
+        });
+      }
+    }
+
+    function createClouds(){
+      elements = [];
+      const total = 9;   // 👈 Reduced number
+
+      for(let i = 0; i < total; i++){
+        elements.push({
+          type: "cloud",
+          x: (canvas.width / total) * i + Math.random() * 100,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 80 + 90,   // 👈 Bigger clouds
+          speed: Math.random() * 0.25 + 0.1
+        });
+      }
+    }
+
+    function drawCloud(x,y,size){
+
+      // Soft shadow
+      ctx.shadowColor = "rgba(0, 0, 0, 0.18)";
+      ctx.shadowBlur = 25;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 8;
+
+      // Soft white gradient
+      const gradient = ctx.createRadialGradient(
+        x, y, size*0.3,
+        x, y, size
+      );
+
+      gradient.addColorStop(0, "rgba(255,255,255,0.98)");
+      gradient.addColorStop(0.6, "rgba(255,255,255,0.92)");
+      gradient.addColorStop(1, "rgba(210,225,255,0.75)");
+
+      ctx.fillStyle = gradient;
+
+      ctx.beginPath();
+      ctx.arc(x,y,size*0.4,0,Math.PI*2);
+      ctx.arc(x+size*0.4,y,size*0.35,0,Math.PI*2);
+      ctx.arc(x-size*0.4,y,size*0.35,0,Math.PI*2);
+      ctx.arc(x,y-size*0.3,size*0.35,0,Math.PI*2);
+      ctx.fill();
+
+      // Reset shadow (IMPORTANT so particles don’t glow)
+      ctx.shadowBlur = 0;
+    }
+
+    function animate(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      if(document.body.classList.contains("light")){
+        elements.forEach(el=>{
+          el.x += el.speed;
+          if(el.x > canvas.width + 100) el.x = -100;
+          drawCloud(el.x, el.y, el.size);
+        });
+      } else {
+        ctx.fillStyle = "rgba(192,132,252,.6)";
+        elements.forEach(p=>{
+          p.x+=p.dx;
+          p.y+=p.dy;
+          if(p.x<0||p.x>canvas.width) p.dx*=-1;
+          if(p.y<0||p.y>canvas.height) p.dy*=-1;
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+          ctx.fill();
+        });
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    createDarkParticles();
+    animate();
+
+    const toggleBtn = document.getElementById("themeToggle");
+    const icon = document.getElementById("themeIcon");
+
+    toggleBtn.addEventListener("click", () => {
+      playClick();
+
+      const isLight = document.body.classList.toggle("light");
+      document.body.classList.toggle("dark-mode", !isLight);
+
+      icon.textContent = isLight ? "☀️" : "🌙";
+
+      if (isLight) {
+        createClouds();
+      } else {
+        createDarkParticles();
+      }
+    });
 
 </script>
 
